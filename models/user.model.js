@@ -29,6 +29,10 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    companyName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     dayOfBirth: {
       type: DataTypes.DATE,
     },
@@ -68,7 +72,7 @@ User.init(
       type: DataTypes.STRING,
     },
     role: {
-      type: DataTypes.ENUM("creator", "user", "admin"),
+      type: DataTypes.ENUM("creator", "user", "admin", "company"),
       defaultValue: "creator",
     },
     video1: {
