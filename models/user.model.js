@@ -73,6 +73,12 @@ User.init(
     profileName: {
       type: DataTypes.STRING,
     },
+    biography: {
+      type: DataTypes.STRING,
+    },  
+    languages: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+    },
     role: {
       type: DataTypes.ENUM("creator", "user", "admin", "company"),
       defaultValue: "creator",
