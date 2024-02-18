@@ -31,11 +31,9 @@ User.init(
     },
     companyName: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     ccn: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     dayOfBirth: {
       type: DataTypes.DATE,
