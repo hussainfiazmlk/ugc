@@ -49,8 +49,10 @@ const register = catchAsync(async (req, res) => {
   //1. Upload the profile picture to Firebase Storage
   const { profilePicture } = req.files;
 
+  
   const [file] = profilePicture;
-
+  
+  
   const storageRef = ref(storage, `files/${file.originalname}`);
 
   const metadata = {
@@ -64,6 +66,7 @@ const register = catchAsync(async (req, res) => {
   );
 
   const downloadURL = await getDownloadURL(snapshot.ref);
+
 
   //2. Upload video content to user profile
   const { video1, video2, video3, video4 } = req.files;
@@ -153,36 +156,45 @@ const register = catchAsync(async (req, res) => {
     videoUrl4 = downloadURL;
   }
 
-  const niches = JSON.parse(req.body.niches);
+  let { niches } = req.body
+  if (niches) {
+    JSON.parse(niches?.replace(/'/g, '"'));
+  }
+
+  console.log('====', niches);
+  
 
   const newUser = {
     ...req.body,
     profilePicture: downloadURL,
     role: "creator",
-    niches,
+    niches: niches ? niches : null,
     video1: videoUrl1 ? videoUrl1 : null,
     video2: videoUrl2 ? videoUrl2 : null,
     video3: videoUrl3 ? videoUrl3 : null,
     video4: videoUrl4 ? videoUrl4 : null,
   };
 
+  console.log('user====', newUser);
+
   const user = await userService.createUser(newUser);
+
 
   const { packages } = req.body;
 
-  const parsedPackages = JSON.parse(packages);
+  // const parsedPackages = JSON.parse(packages);
 
-  parsedPackages.packages.map(async (parsedPackage) => {
-    parsedPackage.packs.map(async (pack) => {
-      const newPackage = {
-        ...pack,
-        niche: parsedPackage.name.toLowerCase(),
-        userId: user.id,
-      };
+  // parsedPackages.packages.map(async (parsedPackage) => {
+  //   parsedPackage.packs.map(async (pack) => {
+  //     const newPackage = {
+  //       ...pack,
+  //       niche: parsedPackage.name.toLowerCase(),
+  //       userId: user.id,
+  //     };
 
-      await packageService.createPackage(newPackage);
-    });
-  });
+  //     await packageService.createPackage(newPackage);
+  //   });
+  // });
 
   const tokens = await tokenService.generateAuthTokens(user);
   const verifyEmailToken = await tokenService.generateVerifyEmailToken(user);
@@ -191,6 +203,12 @@ const register = catchAsync(async (req, res) => {
     user,
     verifyEmailToken
   );
+
+
+  
+  console.log('user token====', user, tokens);
+
+
   res.status(httpStatus.CREATED).send({ user, tokens });
 });
 
