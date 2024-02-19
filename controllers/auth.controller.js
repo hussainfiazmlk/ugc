@@ -203,11 +203,6 @@ const register = catchAsync(async (req, res) => {
     verifyEmailToken
   );
 
-
-  
-  console.log('user token====', user, tokens);
-
-
   res.status(httpStatus.CREATED).send({ user, tokens });
 });
 
