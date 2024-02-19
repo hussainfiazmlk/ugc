@@ -158,11 +158,8 @@ const register = catchAsync(async (req, res) => {
 
   let { niches } = req.body
   if (niches) {
-    JSON.parse(niches?.replace(/'/g, '"'));
+    niches = JSON.parse(niches?.replace(/'/g, '"'));
   }
-
-  console.log('====', niches);
-  
 
   const newUser = {
     ...req.body,
@@ -175,10 +172,7 @@ const register = catchAsync(async (req, res) => {
     video4: videoUrl4 ? videoUrl4 : null,
   };
 
-  console.log('user====', newUser);
-
   const user = await userService.createUser(newUser);
-
 
   const { packages } = req.body;
 
